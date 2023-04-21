@@ -41,6 +41,7 @@ public class StudentController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CircuitBreaker(name = "get-all", fallbackMethod = "apiFallBackGetAll")
     public ResponseEntity<List<StudentDTO>> getAll() {
         return ResponseEntity.ok(studentService.getAll());
     }
@@ -55,5 +56,10 @@ public class StudentController {
                 !studentDTO.getStatus().equals(StatusConstants.INACTIVE.getDescription())) {
             throw new BusinessException(StudentResponse.STUDENT_STATUS_INCORRECT);
         }
+    }
+
+    public ResponseEntity<?> apiFallBackGetAll(Exception exception) {
+        log.info(StudentResponse.INTERNAL_SERVER_ERROR.getMessage() + ", Error={}", exception.getMessage());
+        return ResponseEntity.noContent().build();
     }
 }
