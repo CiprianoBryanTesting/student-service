@@ -1,7 +1,14 @@
 server:
   port: 8001
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8902/eureka/
+
 spring:
+  application:
+    name: student-service
   h2:
     console:
       enabled: true
