@@ -1,0 +1,1 @@
+INSERT INTO STUDENT (id, name, lastname, status, age) VALUES (1, 'Bryan', 'Cipriano', true, 24);
