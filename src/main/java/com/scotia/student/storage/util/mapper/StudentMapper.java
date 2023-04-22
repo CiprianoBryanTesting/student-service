@@ -15,7 +15,7 @@ public interface StudentMapper {
     @Mapping(target = "status", expression = "java(statusToDTO(student.isStatus()))")
     StudentDTO toDTO(Student student);
 
-    List<StudentDTO> toDTO(List<Student> students);
+    List<StudentDTO> toDTOList(List<Student> students);
 
     default boolean statusToEntity(String status) {
         return StatusConstants.findByDescription(status).getValue();

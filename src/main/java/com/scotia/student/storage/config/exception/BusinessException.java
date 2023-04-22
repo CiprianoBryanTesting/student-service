@@ -10,9 +10,9 @@ import java.time.*;
 @Builder
 @AllArgsConstructor
 public class BusinessException extends RuntimeException {
-    private final HttpStatus httpStatus;
-    private final String message;
-    private final LocalDateTime date;
+    private HttpStatus httpStatus;
+    private String message;
+    private LocalDateTime date;
 
     public BusinessException(StudentResponse response) {
         this.httpStatus = response.getStatus();
