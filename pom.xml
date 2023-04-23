@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.scotia.student</groupId>
     <artifactId>student-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>student-service</name>
     <description>student-service</description>
     <properties>
