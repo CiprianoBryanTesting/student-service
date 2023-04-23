@@ -6,6 +6,7 @@ import org.springframework.data.domain.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Getter
 @Setter
 public class Student implements Persistable<Integer> {

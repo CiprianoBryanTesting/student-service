@@ -8,8 +8,8 @@ import com.scotia.student.storage.service.*;
 import com.scotia.student.storage.util.constants.*;
 import com.scotia.student.storage.util.enums.*;
 import com.scotia.student.storage.util.mapper.*;
+import lombok.*;
 import lombok.extern.slf4j.*;
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.*;
 import reactor.core.publisher.*;
@@ -18,11 +18,10 @@ import java.util.*;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private StudentMapper studentMapper;
+    private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
     @Transactional
     @Override
