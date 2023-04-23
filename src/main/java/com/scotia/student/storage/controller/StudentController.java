@@ -25,16 +25,6 @@ public class StudentController {
         return studentService.save(studentDTO).map(ResponseEntity::ok);
     }
 
-    @PutMapping("/{id}")
-    public Mono<ResponseEntity<?>> update(@PathVariable Integer id, @Valid @RequestBody StudentDTO studentDTO) {
-        return studentService.update(id, studentDTO).map(ResponseEntity::ok);
-    }
-
-    @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<?>> delete(@PathVariable Integer id) {
-        return studentService.delete(id).map(ResponseEntity::ok);
-    }
-
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     @CircuitBreaker(name = "get-all", fallbackMethod = "apiFallBackGetAll")
     public Mono<ResponseEntity<?>> getAll() {

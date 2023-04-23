@@ -6,8 +6,9 @@ import org.springframework.http.*;
 @Getter
 @AllArgsConstructor
 public enum StudentResponse {
-    STUDENT_NOT_FOUND(HttpStatus.NOT_FOUND, "No se encontró al alumno"),
-    STUDENT_STATUS_INCORRECT(HttpStatus.INTERNAL_SERVER_ERROR, "El valor del campo status es incorrecto"),
+    STUDENT_STATUS_INCORRECT(HttpStatus.BAD_REQUEST, "El valor del campo status es incorrecto"),
+    STUDENT_ALREADY_REGISTERED(HttpStatus.BAD_REQUEST, "El ID ingresado ya se encuentra registrado"),
+    ERROR_SAVE_STUDENT(HttpStatus.INTERNAL_SERVER_ERROR, "Error al guardar al alumno en la DB. Contactar con el administrador."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Existe un error en el servicio de alumnos. Contactar con el administrador.");
 
     private final HttpStatus status;

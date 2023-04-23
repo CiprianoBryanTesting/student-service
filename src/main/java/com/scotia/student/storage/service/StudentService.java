@@ -7,8 +7,6 @@ import java.util.*;
 
 public interface StudentService {
     Mono<StudentDTO> save(StudentDTO studentDTO);
-    Mono<StudentDTO> update(Integer id, StudentDTO studentDTO);
-    Mono<Void> delete(Integer id);
     Mono<List<StudentDTO>> getAll();
     Mono<List<StudentDTO>> getActives();
 }

@@ -5,6 +5,7 @@ import com.scotia.student.storage.controller.dto.*;
 import com.scotia.student.storage.repository.*;
 import com.scotia.student.storage.repository.entity.*;
 import com.scotia.student.storage.service.*;
+import com.scotia.student.storage.util.constants.*;
 import com.scotia.student.storage.util.enums.*;
 import com.scotia.student.storage.util.mapper.*;
 import lombok.extern.slf4j.*;
@@ -23,39 +24,23 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentMapper studentMapper;
 
+    @Transactional
     @Override
     public Mono<StudentDTO> save(StudentDTO studentDTO) {
-        Student student = studentMapper.toEntity(studentDTO);
-        return studentRepository.save(student)
-                .map(savedStudent -> studentMapper.toDTO(savedStudent))
-                .switchIfEmpty(Mono.error(new BusinessException(StudentResponse.INTERNAL_SERVER_ERROR)));
-    }
-
-    @Transactional
-    @Override
-    public Mono<StudentDTO> update(Integer id, StudentDTO studentDTO) {
-        return studentRepository.existsById(id)
+        return studentRepository.existsById(studentDTO.getId())
                 .flatMap(exists -> {
-                    if (!exists) {
-                        log.info(StudentResponse.STUDENT_NOT_FOUND.getMessage());
-                        return Mono.error(new BusinessException(StudentResponse.STUDENT_NOT_FOUND));
+                    if (exists) {
+                        log.info(StudentResponse.STUDENT_ALREADY_REGISTERED.getMessage());
+                        return Mono.error(new BusinessException(StudentResponse.STUDENT_ALREADY_REGISTERED));
+                    }
+                    BusinessException exception = validateFields(studentDTO);
+                    if (exception != null) {
+                        return Mono.error(exception);
                     }
                     Student student = studentMapper.toEntity(studentDTO);
-                    return studentRepository.save(student)
-                            .map(studentMapper::toDTO);
-                });
-    }
-
-    @Transactional
-    @Override
-    public Mono<Void> delete(Integer id) {
-        return studentRepository.existsById(id)
-                .flatMap(exists -> {
-                    if (!exists) {
-                        log.info(StudentResponse.STUDENT_NOT_FOUND.getMessage());
-                        return Mono.error(new BusinessException(StudentResponse.STUDENT_NOT_FOUND));
-                    }
-                    return studentRepository.deleteById(id);
+                    return studentRepository.save(student.setAsNew())
+                            .map(savedStudent -> studentMapper.toDTO(savedStudent))
+                            .switchIfEmpty(Mono.error(new BusinessException(StudentResponse.ERROR_SAVE_STUDENT)));
                 });
     }
 
@@ -69,5 +54,13 @@ public class StudentServiceImpl implements StudentService {
     public Mono<List<StudentDTO>> getActives() {
         return studentRepository.findAllByStatusIsTrue().collectList()
                 .map(students -> studentMapper.toDTOList(students));
+    }
+
+    private BusinessException validateFields(StudentDTO studentDTO) {
+        if (!studentDTO.getStatus().equals(StatusConstants.ACTIVE.getDescription()) &&
+                !studentDTO.getStatus().equals(StatusConstants.INACTIVE.getDescription())) {
+            return new BusinessException(StudentResponse.STUDENT_STATUS_INCORRECT);
+        }
+        return null;
     }
 }
